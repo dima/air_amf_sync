@@ -3,13 +3,18 @@ class AddressesController < ApplicationController
   # GET /addresses.xml
   # GET /addresses.fxml
   def index
-    @addresses = Address.find(:all)
-
+    puts params[:last_synced]
+    if params[:last_synced]
+      @addresses = Address.find(:all, :conditions => ["updated_at >= ?", Time.at(params[:last_synced].to_i).utc])
+    else
+      @addresses = Address.find(:all)
+    end
+    
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @addresses }
-      format.fxml { render :fxml => @addresses }
-      format.amf  { render :amf => @addresses }
+      format.fxml { render :fxml => @addresses.to_fxml(:attributes => {:last_synced => Time.now.utc.to_i}) }
+      format.amf  { render :amf => @addresses.to_amf(:attributes => {:last_synced => Time.now.utc.to_i}) }
     end
   end
 

@@ -3,13 +3,17 @@ class BusinessesController < ApplicationController
   # GET /businesses.xml
   # GET /businesses.fxml
   def index
-    @businesses = Business.find(:all)
-
+    if params[:last_synced]
+      @businesses = Business.find(:all, :conditions => ["updated_at >= ?", Time.at(params[:last_synced].to_i).utc])
+    else
+      @businesses = Business.find(:all)
+    end
+    
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @businesses }
-      format.fxml  { render :fxml => @businesses }
-      format.amf  { render :amf => @businesses }
+      format.fxml  { render :fxml => @businesses.to_fxml(:attributes => {:last_synced => Time.now.utc.to_i}) }
+      format.amf  { render :amf => @businesses.to_amf(:attributes => {:last_synced => Time.now.utc.to_i}) }
     end
   end
 
