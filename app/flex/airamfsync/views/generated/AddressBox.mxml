@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" label="Address"
+  xmlns:rx="org.restfulx.components.rx.*">
+  <mx:Script><![CDATA[
+    import org.restfulx.Rx;
+    import org.restfulx.utils.RxUtils;
+    import airamfsync.models.Address;
+    import airamfsync.models.Business;
+
+    [Bindable]
+    private var address:Address = new Address();
+
+    private function newAddress():void {
+      address = new Address();
+      addressesList.selectedIndex = -1;
+    }
+
+    private function saveAddress():void {
+      updateModelProperties();
+      if (address.id) {
+        address.update({onSuccess: onAddressUpdate});
+      } else {
+        address.create({onSuccess: onAddressCreate});
+      }
+    }
+  
+    private function updateModelProperties():void {
+      address.lineOne = lineOneTextInput.text;
+      address.lineTwo = lineTwoTextInput.text;
+      address.city = cityTextInput.text;
+      address.zip = zipTextInput.text;
+      address.state = stateTextInput.text;
+      address.country = countryTextInput.text;
+  
+      address.business = Business(businessComboBox.selectedItem);
+    }
+   
+    private function destroyAddress():void {
+      address.destroy({onSuccess: onAddressDestroy});
+    }
+    
+    private function onAddressSelect():void {
+      address = RxUtils.clone(addressesList.selectedItem) as Address;
+    }
+    
+    private function onAddressCreate(result:Address):void {
+      address = new Address;
+    }
+    
+    private function onAddressUpdate(result:Address):void {
+      addressesList.selectedItem = result;
+      onAddressSelect();
+    }
+    
+    private function onAddressDestroy(result:Address):void {
+      onAddressCreate(result);
+    }    
+  ]]></mx:Script>
+  <mx:Panel id="addressesPanel"
+    title="Addresses" cornerRadius="0" dropShadowEnabled="false" borderStyle="solid"
+    borderThickness="1" backgroundColor="#EEEEEE" width="25%" height="100%">
+    <mx:List id="addressesList"
+      width="100%" height="100%"
+      dataProvider="{Rx.models.index(Address)}"
+      change="onAddressSelect()"/>
+    <mx:ControlBar width="100%">
+      <mx:Button label="New Address" width="100%" height="30"
+        click="newAddress()"/>
+    </mx:ControlBar>
+  </mx:Panel>
+  <mx:Panel title="Edit Address" cornerRadius="0" dropShadowEnabled="false" borderStyle="solid"
+    borderThickness="1" backgroundColor="#EEEEEE" width="75%" height="100%">
+    <mx:Form width="100%" height="100%">
+      <mx:FormItem label="LineOne" width="100%">
+        <mx:TextInput id="lineOneTextInput" width="100%" text="{address.lineOne}"/>
+      </mx:FormItem>
+      <mx:FormItem label="LineTwo" width="100%">
+        <mx:TextInput id="lineTwoTextInput" width="100%" text="{address.lineTwo}"/>
+      </mx:FormItem>
+      <mx:FormItem label="City" width="100%">
+        <mx:TextInput id="cityTextInput" width="100%" text="{address.city}"/>
+      </mx:FormItem>
+      <mx:FormItem label="Zip" width="100%">
+        <mx:TextInput id="zipTextInput" width="100%" text="{address.zip}"/>
+      </mx:FormItem>
+      <mx:FormItem label="State" width="100%">
+        <mx:TextInput id="stateTextInput" width="100%" text="{address.state}"/>
+      </mx:FormItem>
+      <mx:FormItem label="Country" width="100%">
+        <mx:TextInput id="countryTextInput" width="100%" text="{address.country}"/>
+      </mx:FormItem>
+      <mx:FormItem label="Business" width="100%">
+        <mx:ComboBox id="businessComboBox" width="200"
+          labelField="{Business.LABEL}"
+          dataProvider="{Rx.models.index(Business)}" prompt="Business ..."
+          selectedItem="{address.business}"/>
+      </mx:FormItem>
+    </mx:Form>
+    <mx:ControlBar width="100%">
+      <mx:Button label="Save Address" width="50%" height="30"
+        click="saveAddress()"/>
+      <mx:Button label="Delete Address" width="50%" height="30"
+        enabled="{RxUtils.canDeleteModel(address)}"
+        click="destroyAddress()"/>
+    </mx:ControlBar>
+  </mx:Panel>
+</mx:HBox>

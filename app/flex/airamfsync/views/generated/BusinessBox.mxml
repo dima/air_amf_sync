@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" label="Business"
+  xmlns:rx="org.restfulx.components.rx.*">
+  <mx:Script><![CDATA[
+    import org.restfulx.Rx;
+    import org.restfulx.utils.RxUtils;
+    import airamfsync.models.Business;
+
+    [Bindable]
+    private var business:Business = new Business();
+
+    private function newBusiness():void {
+      business = new Business();
+      businessesList.selectedIndex = -1;
+    }
+
+    private function saveBusiness():void {
+      updateModelProperties();
+      if (business.id) {
+        business.update({onSuccess: onBusinessUpdate});
+      } else {
+        business.create({onSuccess: onBusinessCreate});
+      }
+    }
+  
+    private function updateModelProperties():void {
+      business.businessNumber = businessNumberTextInput.text;
+      business.newBusiness = newBusinessCheckBox.selected;
+      business.name = nameTextInput.text;
+      business.phone = phoneTextInput.text;
+      business.mobilePhone = mobilePhoneTextInput.text;
+      business.fax = faxTextInput.text;
+      business.email = emailTextInput.text;
+  
+    }
+   
+    private function destroyBusiness():void {
+      business.destroy({onSuccess: onBusinessDestroy});
+    }
+    
+    private function onBusinessSelect():void {
+      business = RxUtils.clone(businessesList.selectedItem) as Business;
+    }
+    
+    private function onBusinessCreate(result:Business):void {
+      business = new Business;
+    }
+    
+    private function onBusinessUpdate(result:Business):void {
+      businessesList.selectedItem = result;
+      onBusinessSelect();
+    }
+    
+    private function onBusinessDestroy(result:Business):void {
+      onBusinessCreate(result);
+    }    
+  ]]></mx:Script>
+  <mx:Panel id="businessesPanel"
+    title="Businesses" cornerRadius="0" dropShadowEnabled="false" borderStyle="solid"
+    borderThickness="1" backgroundColor="#EEEEEE" width="25%" height="100%">
+    <mx:List id="businessesList"
+      width="100%" height="100%"
+      dataProvider="{Rx.models.index(Business)}"
+      change="onBusinessSelect()"/>
+    <mx:ControlBar width="100%">
+      <mx:Button label="New Business" width="100%" height="30"
+        click="newBusiness()"/>
+    </mx:ControlBar>
+  </mx:Panel>
+  <mx:Panel title="Edit Business" cornerRadius="0" dropShadowEnabled="false" borderStyle="solid"
+    borderThickness="1" backgroundColor="#EEEEEE" width="75%" height="100%">
+    <mx:Form width="100%" height="100%">
+      <mx:FormItem label="BusinessNumber" width="100%">
+        <mx:TextInput id="businessNumberTextInput" width="100%" text="{business.businessNumber}"/>
+      </mx:FormItem>
+      <mx:FormItem label="NewBusiness" width="100%">
+        <mx:CheckBox id="newBusinessCheckBox" selected="{business.newBusiness}"/>
+      </mx:FormItem>
+      <mx:FormItem label="Name" width="100%">
+        <mx:TextInput id="nameTextInput" width="100%" text="{business.name}"/>
+      </mx:FormItem>
+      <mx:FormItem label="Phone" width="100%">
+        <mx:TextInput id="phoneTextInput" width="100%" text="{business.phone}"/>
+      </mx:FormItem>
+      <mx:FormItem label="MobilePhone" width="100%">
+        <mx:TextInput id="mobilePhoneTextInput" width="100%" text="{business.mobilePhone}"/>
+      </mx:FormItem>
+      <mx:FormItem label="Fax" width="100%">
+        <mx:TextInput id="faxTextInput" width="100%" text="{business.fax}"/>
+      </mx:FormItem>
+      <mx:FormItem label="Email" width="100%">
+        <mx:TextInput id="emailTextInput" width="100%" text="{business.email}"/>
+      </mx:FormItem>
+    </mx:Form>
+    <mx:ControlBar width="100%">
+      <mx:Button label="Save Business" width="50%" height="30"
+        click="saveBusiness()"/>
+      <mx:Button label="Delete Business" width="50%" height="30"
+        enabled="{RxUtils.canDeleteModel(business)}"
+        click="destroyBusiness()"/>
+    </mx:ControlBar>
+  </mx:Panel>
+</mx:HBox>

@@ -1,0 +1,3 @@
+[submodule "vendor/plugins/restfulx"]
+	path = vendor/plugins/restfulx
+	url = git://github.com/dima/restfulx.git

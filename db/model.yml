@@ -1,0 +1,18 @@
+business:
+  - business_number: string
+  - new_business: boolean
+  - name: string
+  - phone: string
+  - mobile_phone: string
+  - fax: string
+  - email: string
+  - has_many: [addresses]
+  
+address:
+  - line_one: string
+  - line_two: string
+  - city: string
+  - zip: string
+  - state: string
+  - country: string
+  - belongs_to: [business]

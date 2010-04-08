@@ -1,0 +1,41 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+address_one:
+  id: <%= Fixtures.identify(:address_one) %>
+  line_one: Address1LineOneString
+  line_two: Address1LineTwoString
+  city: Address1CityString
+  zip: Address1ZipString
+  state: Address1StateString
+  country: Address1CountryString
+  business_id: <%= Fixtures.identify(:business_one) %>
+
+address_two:
+  id: <%= Fixtures.identify(:address_two) %>
+  line_one: Address2LineOneString
+  line_two: Address2LineTwoString
+  city: Address2CityString
+  zip: Address2ZipString
+  state: Address2StateString
+  country: Address2CountryString
+  business_id: <%= Fixtures.identify(:business_two) %>
+
+address_three:
+  id: <%= Fixtures.identify(:address_three) %>
+  line_one: Address3LineOneString
+  line_two: Address3LineTwoString
+  city: Address3CityString
+  zip: Address3ZipString
+  state: Address3StateString
+  country: Address3CountryString
+  business_id: <%= Fixtures.identify(:business_three) %>
+
+address_four:
+  id: <%= Fixtures.identify(:address_four) %>
+  line_one: Address4LineOneString
+  line_two: Address4LineTwoString
+  city: Address4CityString
+  zip: Address4ZipString
+  state: Address4StateString
+  country: Address4CountryString
+  business_id: <%= Fixtures.identify(:business_four) %>

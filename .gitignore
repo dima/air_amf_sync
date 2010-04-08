@@ -1,0 +1,3 @@
+log/*.log
+public/bin/*.swf
+bin-debug/*.swf
