@@ -5,7 +5,10 @@
   layout="horizontal" styleName="plain" initialize="init()">
   <mx:Script>
     <![CDATA[
+      import flash.events.ProgressEvent;
+    
       import air.net.SocketMonitor;
+      
       import org.restfulx.events.PullEndEvent;
       import org.restfulx.events.PullStartEvent;
       import org.restfulx.events.PushEndEvent;
@@ -16,6 +19,7 @@
       import org.restfulx.services.air.AIRServiceProvider;
       import org.restfulx.services.amf.AMFServiceProvider;
       import org.restfulx.Rx;
+      
       import airamfsync.controllers.ApplicationController;
 
       [Bindable]
@@ -26,6 +30,9 @@
 
       [Bindable]
       private var syncStatus:String;
+      
+      [Bindable]
+      private var progressUpdate:String;
 
       private function init():void {
         Rx.httpRootUrl = "http://localhost:3000/";
@@ -42,11 +49,17 @@
         Rx.changes.setSyncProviders(
           ISyncingServiceProvider(Rx.services.getServiceProvider(AIRServiceProvider.ID)),
             Rx.services.getServiceProvider(AMFServiceProvider.ID));
+            
+        Rx.models.addEventListener(ProgressEvent.PROGRESS, onProgressUpdate);
 
         Rx.changes.addEventListener(PushStartEvent.ID, onPushStart);
         Rx.changes.addEventListener(PushEndEvent.ID, onPushEnd);
         Rx.changes.addEventListener(PullStartEvent.ID, onPullStart);
         Rx.changes.addEventListener(PullEndEvent.ID, onPullEnd);
+      }
+      
+      private function onProgressUpdate(event:ProgressEvent):void {
+        progressUpdate = "Downloaded: " + event.bytesLoaded + "B out of: " + event.bytesTotal + "B";
       }
 
       private function onPushStart(event:Event):void {
@@ -94,6 +107,7 @@
       <mx:Button label="Push" click="{Rx.changes.push()}" enabled="{online}"/>
       <mx:Button label="Pull" click="{Rx.changes.pull()}" enabled="{online}"/>
     </mx:HBox>
+    <mx:Label text="{progressUpdate}"/>
     <mx:Label text="{syncStatus}"/>
   </mx:VBox>
   <mx:LinkBar dataProvider="{mainViewStack}" direction="vertical" borderStyle="solid" backgroundColor="#EEEEEE"/>
