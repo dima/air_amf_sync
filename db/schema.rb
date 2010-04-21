@@ -11,8 +11,7 @@
 
 ActiveRecord::Schema.define(:version => 20100408204615) do
 
-  create_table "addresses", :id => false, :force => true do |t|
-    t.string   "id"
+  create_table "addresses", :force => true do |t|
     t.string   "line_one"
     t.string   "line_two"
     t.string   "city"
@@ -24,8 +23,7 @@ ActiveRecord::Schema.define(:version => 20100408204615) do
     t.datetime "updated_at"
   end
 
-  create_table "businesses", :id => false, :force => true do |t|
-    t.string   "id"
+  create_table "businesses", :force => true do |t|
     t.string   "business_number"
     t.boolean  "new_business"
     t.string   "name"

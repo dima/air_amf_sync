@@ -21,6 +21,7 @@
       import org.restfulx.Rx;
       
       import airamfsync.controllers.ApplicationController;
+      import airamfsync.models.Address;
 
       [Bindable]
       private var socketMonitor:SocketMonitor;
@@ -35,6 +36,7 @@
       private var progressUpdate:String;
 
       private function init():void {
+        Rx.enableLogging();
         Rx.httpRootUrl = "http://localhost:3000/";
         Rx.enableSync = true;
 
@@ -44,7 +46,7 @@
         socketMonitor.start();
         
         ApplicationController.initialize([AIRServiceProvider, AMFServiceProvider], 
-          AIRServiceProvider.ID, "airamfsync");
+          AMFServiceProvider.ID, "airamfsync");
 
         Rx.changes.setSyncProviders(
           ISyncingServiceProvider(Rx.services.getServiceProvider(AIRServiceProvider.ID)),

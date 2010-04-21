@@ -3,7 +3,6 @@ class AddressesController < ApplicationController
   # GET /addresses.xml
   # GET /addresses.fxml
   def index
-    puts params[:last_synced]
     if params[:last_synced]
       @addresses = Address.find(:all, :conditions => ["updated_at >= ?", Time.at(params[:last_synced].to_i).utc])
     else
