@@ -8,7 +8,8 @@ address_one:
   zip: Address1ZipString
   state: Address1StateString
   country: Address1CountryString
-  business_id: <%= Fixtures.identify(:business_one) %>
+  owner_id: <%= Fixtures.identify(:business_one) %>
+  owner_type: "Business"
 
 address_two:
   id: <%= Fixtures.identify(:address_two) %>
@@ -18,7 +19,8 @@ address_two:
   zip: Address2ZipString
   state: Address2StateString
   country: Address2CountryString
-  business_id: <%= Fixtures.identify(:business_two) %>
+  owner_id: <%= Fixtures.identify(:business_two) %>
+  owner_type: "Business"
 
 address_three:
   id: <%= Fixtures.identify(:address_three) %>
@@ -28,7 +30,8 @@ address_three:
   zip: Address3ZipString
   state: Address3StateString
   country: Address3CountryString
-  business_id: <%= Fixtures.identify(:business_three) %>
+  owner_id: <%= Fixtures.identify(:business_three) %>
+  owner_type: "Business"
 
 address_four:
   id: <%= Fixtures.identify(:address_four) %>
@@ -38,4 +41,5 @@ address_four:
   zip: Address4ZipString
   state: Address4StateString
   country: Address4CountryString
-  business_id: <%= Fixtures.identify(:business_four) %>
+  owner_id: <%= Fixtures.identify(:business_four) %>
+  owner_type: "Business"

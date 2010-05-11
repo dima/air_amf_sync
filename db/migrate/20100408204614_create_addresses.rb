@@ -8,7 +8,8 @@ class CreateAddresses < ActiveRecord::Migration
       t.string :zip
       t.string :state
       t.string :country
-      t.string :business_id
+      t.string :owner_id
+      t.string :owner_type
 
       t.timestamps
     end

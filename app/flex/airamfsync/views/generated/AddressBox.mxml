@@ -32,7 +32,7 @@
       address.state = stateTextInput.text;
       address.country = countryTextInput.text;
   
-      address.business = Business(businessComboBox.selectedItem);
+      address.owner = Business(businessComboBox.selectedItem);
     }
    
     private function destroyAddress():void {
@@ -93,7 +93,7 @@
         <mx:ComboBox id="businessComboBox" width="200"
           labelField="{Business.LABEL}"
           dataProvider="{Rx.models.index(Business)}" prompt="Business ..."
-          selectedItem="{address.business}"/>
+          selectedItem="{address.owner}"/>
       </mx:FormItem>
     </mx:Form>
     <mx:ControlBar width="100%">

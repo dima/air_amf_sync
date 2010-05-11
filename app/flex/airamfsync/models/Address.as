@@ -19,8 +19,8 @@ package airamfsync.models {
 
     public var country:String = "";
 
-    [BelongsTo]
-    public var business:Business;
+    [BelongsTo(polymorphic="true", dependsOn="Business")]
+    public var owner:Object;
 
     public function Address() {
       super(LABEL);
