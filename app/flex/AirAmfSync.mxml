@@ -107,7 +107,7 @@
     <mx:Label text="Status: {online ? 'Online' : 'Offline' }"/>
     <mx:HBox>
       <mx:Button label="Push" click="{Rx.changes.push()}" enabled="{online}"/>
-      <mx:Button label="Pull" click="{Rx.changes.pull()}" enabled="{online}"/>
+      <mx:Button label="Pull" click="{Rx.changes.pull(Address)}" enabled="{online}"/>
     </mx:HBox>
     <mx:Label text="{progressUpdate}"/>
     <mx:Label text="{syncStatus}"/>

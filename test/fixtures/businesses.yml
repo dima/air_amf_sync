@@ -1,41 +1,13 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
-business_one:
-  id: <%= Fixtures.identify(:business_one) %>
-  business_number: Business1BusinessNumberString
-  new_business: false
-  name: Business1NameString
-  phone: Business1PhoneString
-  mobile_phone: Business1MobilePhoneString
-  fax: Business1FaxString
-  email: Business1EmailString
-
-business_two:
-  id: <%= Fixtures.identify(:business_two) %>
-  business_number: Business2BusinessNumberString
-  new_business: false
-  name: Business2NameString
-  phone: Business2PhoneString
-  mobile_phone: Business2MobilePhoneString
-  fax: Business2FaxString
-  email: Business2EmailString
-
-business_three:
-  id: <%= Fixtures.identify(:business_three) %>
-  business_number: Business3BusinessNumberString
-  new_business: false
-  name: Business3NameString
-  phone: Business3PhoneString
-  mobile_phone: Business3MobilePhoneString
-  fax: Business3FaxString
-  email: Business3EmailString
-
-business_four:
-  id: <%= Fixtures.identify(:business_four) %>
-  business_number: Business4BusinessNumberString
-  new_business: false
-  name: Business4NameString
-  phone: Business4PhoneString
-  mobile_phone: Business4MobilePhoneString
-  fax: Business4FaxString
-  email: Business4EmailString
+<% for i in 1..5000 %>
+  business_<%= i %>:
+    id: <%= Fixtures.identify("business_#{i}".to_sym) %>
+    business_number: <%= i %>00
+    new_business: false
+    name: <%= i %>Business
+    phone: 1778554997
+    mobile_phone: 1778554914
+    fax: 1778554914
+    email: business<%= i %>@business.com
+<% end %>

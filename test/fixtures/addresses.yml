@@ -1,45 +1,14 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
-address_one:
-  id: <%= Fixtures.identify(:address_one) %>
-  line_one: Address1LineOneString
-  line_two: Address1LineTwoString
-  city: Address1CityString
-  zip: Address1ZipString
-  state: Address1StateString
-  country: Address1CountryString
-  owner_id: <%= Fixtures.identify(:business_one) %>
-  owner_type: "Business"
-
-address_two:
-  id: <%= Fixtures.identify(:address_two) %>
-  line_one: Address2LineOneString
-  line_two: Address2LineTwoString
-  city: Address2CityString
-  zip: Address2ZipString
-  state: Address2StateString
-  country: Address2CountryString
-  owner_id: <%= Fixtures.identify(:business_two) %>
-  owner_type: "Business"
-
-address_three:
-  id: <%= Fixtures.identify(:address_three) %>
-  line_one: Address3LineOneString
-  line_two: Address3LineTwoString
-  city: Address3CityString
-  zip: Address3ZipString
-  state: Address3StateString
-  country: Address3CountryString
-  owner_id: <%= Fixtures.identify(:business_three) %>
-  owner_type: "Business"
-
-address_four:
-  id: <%= Fixtures.identify(:address_four) %>
-  line_one: Address4LineOneString
-  line_two: Address4LineTwoString
-  city: Address4CityString
-  zip: Address4ZipString
-  state: Address4StateString
-  country: Address4CountryString
-  owner_id: <%= Fixtures.identify(:business_four) %>
-  owner_type: "Business"
+<% for i in 1..5000 %>
+  address_<%= i %>:
+    id: <%= Fixtures.identify("address_#{i}".to_sym) %>
+    line_one: Address<%= i %>LineOneString
+    line_two: Address<%= i %>LineTwoString
+    city: Vancouver
+    zip: V6B 0E3
+    state: British Columbia
+    country: Canada
+    owner_id: <%= Fixtures.identify("business_#{i}".to_sym) %>
+    owner_type: "Business"
+<% end %>
