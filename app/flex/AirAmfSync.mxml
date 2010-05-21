@@ -35,9 +35,15 @@
       
       [Bindable]
       private var progressUpdate:String;
+      
+      [Bindable]
+      private var totalPages:int;
+      
+      [Bindable]
+      private var currentPage:int = 1;
 
       private function init():void {
-        Rx.enableLogging();
+        /*Rx.enableLogging();*/
         Rx.httpRootUrl = "http://localhost:3000/";
         Rx.enableSync = true;
 
@@ -74,11 +80,16 @@
       }
 
       private function onPullStart(event:Event):void {
-        syncStatus = "Pulling data...";
+        syncStatus = "Pulling data... (Page: " + currentPage + " of :" + totalPages + ")";
       }
 
       private function onPullEnd(event:Event):void {
-        syncStatus = "Pull complete.";
+        syncStatus = "Pull complete. (Page: " + currentPage + " of :" + totalPages + ")";
+        totalPages = Rx.models.cached(Address).metadata["totalPages"];
+        if (currentPage < totalPages) {
+          currentPage++;
+          pullWithMetadata();
+        }
       }
 
       private function onNetworkStatusChange(event:StatusEvent):void {
@@ -102,10 +113,11 @@
         }
       }
       
-      private function pullWithMetadata():void {
-        Rx.changes.pull({type: Address, metadata: {page:1, limit: 1000}});
+      private function pullWithMetadata(resetCurrentPage:Boolean = false):void {
+        if (resetCurrentPage) currentPage = 1;
+        Rx.changes.pull({type: Address, metadata: {page:currentPage, limit: 500}});
         /*Rx.changes.pull();*/
-      }
+      }      
     ]]>
   </mx:Script>
   <mx:VBox height="100%">
@@ -113,7 +125,7 @@
     <mx:Label text="Status: {online ? 'Online' : 'Offline' }"/>
     <mx:HBox>
       <mx:Button label="Push" click="{Rx.changes.push()}" enabled="{online}"/>
-      <mx:Button label="Pull" click="{pullWithMetadata()}" enabled="{online}"/>
+      <mx:Button label="Pull" click="{pullWithMetadata(true)}" enabled="{online}"/>
     </mx:HBox>
     <mx:Label text="{progressUpdate}"/>
     <mx:Label text="{syncStatus}"/>
