@@ -4,9 +4,10 @@ class AddressesController < ApplicationController
   # GET /addresses.fxml
   def index
     if params[:last_synced]
-      @addresses = Address.find(:all, :conditions => ["updated_at >= ?", Time.at(params[:last_synced].to_i).utc])
+      @addresses = Address.paginate(:per_page => params[:limit], :page => params[:page], 
+        :conditions => ["updated_at >= ?", Time.at(params[:last_synced].to_i).utc])
     else
-      @addresses = Address.find(:all)
+      @addresses = Address.paginate(:per_page => params[:limit], :page => params[:page])
     end
     
     respond_to do |format|

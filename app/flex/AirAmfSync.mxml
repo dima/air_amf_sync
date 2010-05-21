@@ -22,6 +22,7 @@
       
       import airamfsync.controllers.ApplicationController;
       import airamfsync.models.Address;
+      import airamfsync.models.Business;
 
       [Bindable]
       private var socketMonitor:SocketMonitor;
@@ -100,6 +101,11 @@
             return "No idea";
         }
       }
+      
+      private function pullWithMetadata():void {
+        Rx.changes.pull({type: Address, metadata: {page:1, limit: 500}});
+        /*Rx.changes.pull();*/
+      }
     ]]>
   </mx:Script>
   <mx:VBox height="100%">
@@ -107,7 +113,7 @@
     <mx:Label text="Status: {online ? 'Online' : 'Offline' }"/>
     <mx:HBox>
       <mx:Button label="Push" click="{Rx.changes.push()}" enabled="{online}"/>
-      <mx:Button label="Pull" click="{Rx.changes.pull(Address)}" enabled="{online}"/>
+      <mx:Button label="Pull" click="{pullWithMetadata()}" enabled="{online}"/>
     </mx:HBox>
     <mx:Label text="{progressUpdate}"/>
     <mx:Label text="{syncStatus}"/>
