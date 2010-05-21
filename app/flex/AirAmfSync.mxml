@@ -103,7 +103,7 @@
       }
       
       private function pullWithMetadata():void {
-        Rx.changes.pull({type: Address, metadata: {page:1, limit: 500}});
+        Rx.changes.pull({type: Address, metadata: {page:1, limit: 1000}});
         /*Rx.changes.pull();*/
       }
     ]]>
