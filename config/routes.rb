@@ -1,9 +1,10 @@
 ActionController::Routing::Routes.draw do |map|
+  map.connect 'pull', :controller => 'sync', :action => 'pull'
+  
   map.resources :businesses
 
   map.resources :addresses
 
-  
   # Map application root to default RestfulX controller
   map.root :controller => "flex"
   
