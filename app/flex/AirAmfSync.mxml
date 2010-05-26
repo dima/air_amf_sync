@@ -120,7 +120,7 @@
       }
       
       private function pull():void {
-        Rx.http(onPull).invoke("pull/businesses");
+        Rx.http(onPull).invoke("pull/businesses.json");
       }
       
       private function onPull(result:String):void {
