@@ -8,6 +8,9 @@
 
     [Bindable]
     private var business:Business = new Business();
+    
+    [Bindable]
+    private var indexOptions:Object = {metadata: {limit: 500, offset: 0}};
 
     private function newBusiness():void {
       business = new Business();
@@ -53,14 +56,15 @@
     
     private function onBusinessDestroy(result:Business):void {
       onBusinessCreate(result);
-    }    
+    }
+    
   ]]></mx:Script>
   <mx:Panel id="businessesPanel"
     title="Businesses" cornerRadius="0" dropShadowEnabled="false" borderStyle="solid"
     borderThickness="1" backgroundColor="#EEEEEE" width="25%" height="100%">
     <mx:List id="businessesList"
       width="100%" height="100%"
-      dataProvider="{Rx.models.index(Business)}"
+      dataProvider="{Rx.models.index(Business, indexOptions)}"
       change="onBusinessSelect()"/>
     <mx:ControlBar width="100%">
       <mx:Button label="New Business" width="100%" height="30"

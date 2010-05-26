@@ -49,7 +49,7 @@
       private var currentPage:int = 1;
       
       private function init():void {
-        /*Rx.enableLogging();*/
+        Rx.enableLogging();
         Rx.httpRootUrl = "http://localhost:3000/";
         Rx.enableSync = true;
 
@@ -158,7 +158,7 @@
   <mx:LinkBar dataProvider="{mainViewStack}" direction="vertical" borderStyle="solid" backgroundColor="#EEEEEE"/>
   <mx:ViewStack id="mainViewStack" width="100%" height="100%">
     <!-- For a simple demo, put all the components here. -->
-    <generated:AddressBox/>
+    <!-- <generated:AddressBox/> -->
     <generated:BusinessBox/>
   </mx:ViewStack>
 </mx:WindowedApplication>

@@ -19,6 +19,7 @@ package airamfsync.models {
 
     public var country:String = "";
 
+    [Lazy]
     [BelongsTo(polymorphic="true", dependsOn="Business")]
     public var owner:Object;
 
