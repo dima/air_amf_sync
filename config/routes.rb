@@ -1,5 +1,5 @@
 ActionController::Routing::Routes.draw do |map|
-  map.connect 'pull', :controller => 'sync', :action => 'pull'
+  map.connect 'pull/:model.:format', :controller => 'sync', :action => 'pull'
   
   map.resources :businesses
 

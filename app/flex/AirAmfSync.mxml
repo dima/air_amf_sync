@@ -48,8 +48,6 @@
       [Bindable]
       private var currentPage:int = 1;
       
-      private var airController:AuxAIRController;
-
       private function init():void {
         /*Rx.enableLogging();*/
         Rx.httpRootUrl = "http://localhost:3000/";
@@ -72,9 +70,7 @@
         Rx.changes.addEventListener(PushStartEvent.ID, onPushStart);
         Rx.changes.addEventListener(PushEndEvent.ID, onPushEnd);
         Rx.changes.addEventListener(PullStartEvent.ID, onPullStart);
-        Rx.changes.addEventListener(PullEndEvent.ID, onPullEnd);
-        
-        airController = XRx.air();
+        Rx.changes.addEventListener(PullEndEvent.ID, onPullEnd);        
       }
       
       private function onProgressUpdate(event:ProgressEvent):void {
@@ -124,7 +120,7 @@
       }
       
       private function pull():void {
-        Rx.http(onPull).invoke("pull");
+        Rx.http(onPull).invoke("pull/businesses");
       }
       
       private function onPull(result:String):void {
@@ -136,7 +132,7 @@
             business["email"] + "','" + business["mobile_phone"] + "','" +
             business["phone"] + "','" + business["name"] + "','" + business["fax"] + "'," +
             business["new_business"] + ",'" + business["business_number"] + "','" + business["id"] + "',0, '');";
-          airController.executeAnySQL(Business, statement);
+          XRx.air().executeAnySQL(Business, statement);
         }
         
         // note, once everything is done we need to index local DB because the above statements completely bypass the cache, etc
