@@ -42,8 +42,8 @@
       [Bindable]
       private var progressUpdate:String;
       
-      private var airController:AuxAIRController;
-      
+      private var connection:SQLConnection;
+            
       private function init():void {
         Rx.enableLogging();
         Rx.httpRootUrl = "http://localhost:3000/";
@@ -55,11 +55,11 @@
         socketMonitor.start();
         
         ApplicationController.initialize([AIRServiceProvider, AMFServiceProvider], 
-          AMFServiceProvider.ID, "airamfsync");
+          XMLHTTPServiceProvider.ID, "airamfsync");
 
         Rx.changes.setSyncProviders(
           ISyncingServiceProvider(Rx.services.getServiceProvider(AIRServiceProvider.ID)),
-            Rx.services.getServiceProvider(AMFServiceProvider.ID));
+            Rx.services.getServiceProvider(XMLHTTPServiceProvider.ID));
             
         Rx.models.addEventListener(ProgressEvent.PROGRESS, onProgressUpdate);
 
@@ -68,12 +68,26 @@
         Rx.changes.addEventListener(PullStartEvent.ID, onPullStart);
         Rx.changes.addEventListener(PullEndEvent.ID, onPullEnd);
         
-        airController = XRx.air(function(result:Object):void {
-          if (result.toString() == "SUCCESS") {
-            syncStatus = "Sync complete. All records pushed to local database.";
-          }
-        });
+        /*initializeConnection();*/
       }
+      
+      /*private function initializeConnection():void {
+        var databaseName:String = Rx.airDatabaseName;
+        var databaseFile:File = File.userDirectory.resolvePath(databaseName + ".db");
+        connection = new SQLConnection;
+        connection.addEventListener(SQLEvent.OPEN, function(event:SQLEvent):void {
+          event.currentTarget.removeEventListener(event.type, arguments.callee);
+        });
+        connection.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+          trace(ObjectUtil.toString(event));
+          event.currentTarget.removeEventListener(event.type, arguments.callee);
+        });
+        if (Rx.airEncryptionKey != null) {
+          connection.openAsync(databaseFile, SQLMode.CREATE, null, false, 1024, Rx.airEncryptionKey);
+        } else {
+          connection.openAsync(databaseFile);
+        }
+      }*/
       
       private function onProgressUpdate(event:ProgressEvent):void {
         progressUpdate = "Downloaded: " + event.bytesLoaded + "B out of: " + event.bytesTotal + "B";
@@ -99,7 +113,7 @@
         online = (socketMonitor.available) ? true : false;
   
         if (online) {
-          Rx.defaultServiceId = AMFServiceProvider.ID;
+          Rx.defaultServiceId = XMLHTTPServiceProvider.ID;
         } else {
           Rx.defaultServiceId = AIRServiceProvider.ID;
         }
@@ -109,6 +123,8 @@
         switch (id) {
           case AMFServiceProvider.ID:
             return "Rails (AMF)";
+          case XMLHTTPServiceProvider.ID:
+            return "Rails (fXML)";
           case AIRServiceProvider.ID:
             return "AIR (SQLite)";
           default :
@@ -118,16 +134,35 @@
       
       private function pull():void {
         syncStatus = "Pulling data...";
-        Rx.http(onPull).invoke("pull/businesses.json");
+        Rx.amf(onPull).invoke("pull/businesses.json");
       }
       
+      // TODO:
+      // Doing this in a transaction blows up with a StackOverflowError
+      // This is completely independent of RestfulX and doesn't matter where I do this
+      // If there's no trasaction then it doesn't blow up, clearly an AIR issue
       private function onPull(result:String):void {
         syncStatus = "Pushing data to local database ..."
+        
         var results:Array = JSON.decode(result) as Array;
-        var statements:Array = new Array;
+        
+        connection.addEventListener(SQLEvent.COMMIT, function(event:SQLEvent):void {
+          syncStatus = "Done. All records pushed to database.";
+        });
+        connection.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+          trace(event.error.getStackTrace());
+          connection.rollback();
+        });
+        connection.begin();
+        
         for each (var item:Object in results) {
           var business:Object = item["business"]
           var statement:SQLStatement = new SQLStatement;
+          statement.sqlConnection = connection;
+          statement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+            connection.rollback();
+            trace(ObjectUtil.toString(event));
+          });
           statement.text = "insert or replace into businesses(email, mobile_phone, phone, " + 
             "name, fax, new_business, business_number, id, rev, sync) values(:email, :mobile_phone, " + 
             ":phone, :name, :fax, :new_business, :business_number, :id, :rev, :sync)";
@@ -141,10 +176,11 @@
           statement.parameters[":id"] = business["id"];
           statement.parameters[":rev"] = 0;
           statement.parameters[":sync"] = "";
-          statements.push(statement);
-        }        
-        
-        airController.executeAnySQLInBulk(Business, statements);
+          
+          statement.execute();
+        }
+
+        connection.commit();            
       }
     ]]>
   </mx:Script>

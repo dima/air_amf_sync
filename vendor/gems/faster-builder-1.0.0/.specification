@@ -1,0 +1,106 @@
+--- !ruby/object:Gem::Specification 
+name: faster-builder
+version: !ruby/object:Gem::Version 
+  prerelease: false
+  segments: 
+  - 1
+  - 0
+  - 0
+  version: 1.0.0
+platform: ruby
+authors: 
+- Coda Hale
+autorequire: 
+bindir: bin
+cert_chain: []
+
+date: 2010-05-26 00:00:00 -07:00
+default_executable: 
+dependencies: 
+- !ruby/object:Gem::Dependency 
+  name: builder
+  prerelease: false
+  requirement: &id001 !ruby/object:Gem::Requirement 
+    requirements: 
+    - - ">="
+      - !ruby/object:Gem::Version 
+        segments: 
+        - 2
+        - 1
+        - 2
+        version: 2.1.2
+  type: :runtime
+  version_requirements: *id001
+- !ruby/object:Gem::Dependency 
+  name: libxml-ruby
+  prerelease: false
+  requirement: &id002 !ruby/object:Gem::Requirement 
+    requirements: 
+    - - ">="
+      - !ruby/object:Gem::Version 
+        segments: 
+        - 0
+        - 5
+        - 4
+        version: 0.5.4
+  type: :runtime
+  version_requirements: *id002
+description: "    Provides a Builder::XmlMarkup work-alike for libxml-ruby, giving you the\n    ease of use of Builder with the speed and security of libxml.\n"
+email: coda.hale@gmail.com
+executables: []
+
+extensions: []
+
+extra_rdoc_files: 
+- README.markdown
+- MIT-LICENSE
+- CHANGELOG
+- lib/faster_builder/xml_markup.rb
+- lib/faster_builder.rb
+files: 
+- CHANGELOG
+- MIT-LICENSE
+- Rakefile
+- README.markdown
+- lib/faster_builder/xml_markup.rb
+- lib/faster_builder.rb
+- spec/faster_builder/xml_markup_spec.rb
+- spec/faster_builder_spec.rb
+- spec/spec_helper.rb
+has_rdoc: true
+homepage: http://www.github.com/codahale/faster-builder
+licenses: []
+
+post_install_message: 
+rdoc_options: 
+- --title
+- faster-builder
+- --line-numbers
+- --inline-source
+- --main
+- README
+require_paths: 
+- lib
+required_ruby_version: !ruby/object:Gem::Requirement 
+  requirements: 
+  - - ">="
+    - !ruby/object:Gem::Version 
+      segments: 
+      - 0
+      version: "0"
+required_rubygems_version: !ruby/object:Gem::Requirement 
+  requirements: 
+  - - ">="
+    - !ruby/object:Gem::Version 
+      segments: 
+      - 0
+      version: "0"
+requirements: []
+
+rubyforge_project: faster-builder
+rubygems_version: 1.3.6
+signing_key: 
+specification_version: 3
+summary: A drop-in replacement for Builder::XmlMarkup which uses libxml for speed and security.
+test_files: []
+
