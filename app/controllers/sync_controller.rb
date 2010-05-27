@@ -5,7 +5,7 @@ class SyncController < ApplicationController
     if params[:last_synced]
       @results = target.find(:all, :conditions => ["updated_at >= ?", Time.at(params[:last_synced].to_i).utc])
     else
-      @results = target.all
+      @results = target.find(:all)
     end
     
     respond_to do |format|

@@ -4,10 +4,9 @@ class BusinessesController < ApplicationController
   # GET /businesses.fxml
   def index
     if params[:last_synced]
-      @businesses = Business.paginate(:per_page => params[:limit], :page => params[:page], 
-        :conditions => ["updated_at >= ?", Time.at(params[:last_synced].to_i).utc])
+      @businesses = Business.find(:all, :conditions => ["updated_at >= ?", Time.at(params[:last_synced].to_i).utc])
     else
-      @businesses = Business.paginate(:per_page => params[:limit], :page => params[:page])
+      @businesses = Business.all
     end
     
     respond_to do |format|
