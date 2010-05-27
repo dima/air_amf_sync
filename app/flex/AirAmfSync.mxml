@@ -21,6 +21,7 @@
       import org.restfulx.controllers.AuxAIRController;
       import org.restfulx.services.ISyncingServiceProvider;
       import org.restfulx.services.http.XMLHTTPServiceProvider;
+      import org.restfulx.services.http.JSONHTTPServiceProvider;
       import org.restfulx.services.air.AIRServiceProvider;
       import org.restfulx.services.amf.AMFServiceProvider;
       import org.restfulx.Rx;
@@ -42,10 +43,10 @@
       [Bindable]
       private var progressUpdate:String;
       
-      private var connection:SQLConnection;
+      /*private var connection:SQLConnection;*/
             
       private function init():void {
-        Rx.enableLogging();
+        /*Rx.enableLogging();*/
         Rx.httpRootUrl = "http://localhost:3000/";
         Rx.enableSync = true;
 
@@ -54,12 +55,12 @@
         socketMonitor.addEventListener(StatusEvent.STATUS, onNetworkStatusChange);
         socketMonitor.start();
         
-        ApplicationController.initialize([AIRServiceProvider, AMFServiceProvider], 
-          XMLHTTPServiceProvider.ID, "airamfsync");
+        ApplicationController.initialize([AIRServiceProvider, AMFServiceProvider, JSONHTTPServiceProvider], 
+          JSONHTTPServiceProvider.ID, "airamfsync");
 
         Rx.changes.setSyncProviders(
           ISyncingServiceProvider(Rx.services.getServiceProvider(AIRServiceProvider.ID)),
-            Rx.services.getServiceProvider(XMLHTTPServiceProvider.ID));
+            Rx.services.getServiceProvider(JSONHTTPServiceProvider.ID));
             
         Rx.models.addEventListener(ProgressEvent.PROGRESS, onProgressUpdate);
 
@@ -113,7 +114,7 @@
         online = (socketMonitor.available) ? true : false;
   
         if (online) {
-          Rx.defaultServiceId = XMLHTTPServiceProvider.ID;
+          Rx.defaultServiceId = JSONHTTPServiceProvider.ID;
         } else {
           Rx.defaultServiceId = AIRServiceProvider.ID;
         }
@@ -125,6 +126,8 @@
             return "Rails (AMF)";
           case XMLHTTPServiceProvider.ID:
             return "Rails (fXML)";
+          case JSONHTTPServiceProvider.ID:
+            return "Rails (JSON)";
           case AIRServiceProvider.ID:
             return "AIR (SQLite)";
           default :
@@ -134,7 +137,7 @@
       
       private function pull():void {
         syncStatus = "Pulling data...";
-        Rx.amf(onPull).invoke("pull/businesses.json");
+        Rx.http(onPull).invoke("pull/businesses.json");
       }
       
       // TODO:
@@ -145,8 +148,9 @@
         syncStatus = "Pushing data to local database ..."
         
         var results:Array = JSON.decode(result) as Array;
+        trace(ObjectUtil.toString(results));
         
-        connection.addEventListener(SQLEvent.COMMIT, function(event:SQLEvent):void {
+        /*connection.addEventListener(SQLEvent.COMMIT, function(event:SQLEvent):void {
           syncStatus = "Done. All records pushed to database.";
         });
         connection.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
@@ -180,7 +184,7 @@
           statement.execute();
         }
 
-        connection.commit();            
+        connection.commit();   */         
       }
     ]]>
   </mx:Script>

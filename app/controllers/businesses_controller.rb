@@ -11,7 +11,7 @@ class BusinessesController < ApplicationController
     
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @businesses }
+      format.json { render :json => @businesses.to_json(:attributes => {:last_synced => Time.now.utc.to_i.to_s}) }
       format.fxml  { render :fxml => @businesses.to_fxml(:attributes => {:last_synced => Time.now.utc.to_i}) }
       format.amf  { render :amf => @businesses.to_amf(:attributes => {:last_synced => Time.now.utc.to_i}) }
     end
@@ -25,7 +25,7 @@ class BusinessesController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @business }
+      format.json  { render :json => @business }
       format.fxml { render :fxml => @business }
       format.amf  { render :amf => @business }
     end
@@ -57,12 +57,12 @@ class BusinessesController < ApplicationController
       if @business.save
         flash[:notice] = 'Business was successfully created.'
         format.html { redirect_to(@business) }
-        format.xml  { render :xml => @business, :status => :created, :location => @business }
+        format.json { render :json => @business }
         format.fxml { render :fxml => @business }
         format.amf  { render :amf => @business } 
       else
         format.html { render :action => "new" }
-        format.xml  { render :xml => @business.errors, :status => :unprocessable_entity }
+        format.json { render :json => @business.errors }
         format.fxml { render :fxml => @business.errors }
         format.amf  { render :amf => @business.errors }
       end
@@ -86,12 +86,12 @@ class BusinessesController < ApplicationController
       if @saved
         flash[:notice] = 'Business was successfully updated.'
         format.html { redirect_to(@business) }
-        format.xml  { head :ok }
+        format.json  { render :json => @business }
         format.fxml { render :fxml => @business }
         format.amf  { render :amf => @business }
       else
         format.html { render :action => "edit" }
-        format.xml  { render :xml => @business.errors, :status => :unprocessable_entity }
+        format.fxml { render :json => @business.errors }
         format.fxml { render :fxml => @business.errors }
         format.amf  { render :amf => @business.errors }
       end
@@ -107,7 +107,7 @@ class BusinessesController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to(businesses_url) }
-      format.xml  { head :ok }
+      format.json { render :json => @business }
       format.fxml { render :fxml => @business }
       format.amf  { render :amf => @business }
     end

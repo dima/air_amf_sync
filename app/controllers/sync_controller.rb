@@ -9,7 +9,7 @@ class SyncController < ApplicationController
     end
     
     respond_to do |format|
-      format.json { render :json => @results }
+      format.json { render :json => @results.to_json(:attributes => {:last_synced => Time.now.utc.to_i}) }
       format.amf  { render :amf => @results.to_amf(:attributes => {:last_synced => Time.now.utc.to_i}) }
       format.fxml { render :fxml => @results.to_fxml(:attributes => {:last_synced => Time.now.utc.to_i}) }
     end
