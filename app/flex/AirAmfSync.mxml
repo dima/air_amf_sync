@@ -46,7 +46,7 @@
       /*private var connection:SQLConnection;*/
             
       private function init():void {
-        /*Rx.enableLogging();*/
+        Rx.enableLogging();
         Rx.httpRootUrl = "http://localhost:3000/";
         Rx.enableSync = true;
 
@@ -56,11 +56,11 @@
         socketMonitor.start();
         
         ApplicationController.initialize([AIRServiceProvider, AMFServiceProvider, JSONHTTPServiceProvider], 
-          JSONHTTPServiceProvider.ID, "airamfsync");
+          XMLHTTPServiceProvider.ID, "airamfsync");
 
         Rx.changes.setSyncProviders(
           ISyncingServiceProvider(Rx.services.getServiceProvider(AIRServiceProvider.ID)),
-            Rx.services.getServiceProvider(JSONHTTPServiceProvider.ID));
+            Rx.services.getServiceProvider(XMLHTTPServiceProvider.ID));
             
         Rx.models.addEventListener(ProgressEvent.PROGRESS, onProgressUpdate);
 
@@ -114,7 +114,7 @@
         online = (socketMonitor.available) ? true : false;
   
         if (online) {
-          Rx.defaultServiceId = JSONHTTPServiceProvider.ID;
+          Rx.defaultServiceId = XMLHTTPServiceProvider.ID;
         } else {
           Rx.defaultServiceId = AIRServiceProvider.ID;
         }
