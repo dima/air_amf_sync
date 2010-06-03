@@ -3,18 +3,17 @@ class AddressesController < ApplicationController
   # GET /addresses.xml
   # GET /addresses.fxml
   def index
-    if !params[:page] && params[:last_synced]
-      @addresses = Address.paginate(:per_page => params[:limit], :page => params[:page], 
-        :conditions => ["updated_at >= ?", Time.at(params[:last_synced].to_i).utc])
+    if params[:last_synced]
+      @addresses = Address.find(:all, :conditions => ["updated_at >= ?", Time.at(params[:last_synced].to_i).utc])
     else
-      @addresses = Address.paginate(:per_page => params[:limit], :page => params[:page])
+      @addresses = Address.all
     end
     
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @addresses }
-      format.fxml { render :fxml => @addresses.to_fxml(:attributes => {:last_synced => Time.now.utc.to_i, :total_pages => @addresses.total_pages}) }
-      format.amf  { render :amf => @addresses.to_amf(:attributes => {:last_synced => Time.now.utc.to_i, :total_pages => @addresses.total_pages}) }
+      format.fxml { render :fxml => @addresses.to_fxml(:attributes => {:last_synced => Time.now.utc.to_i}) }
+      format.amf  { render :amf => @addresses.to_amf(:attributes => {:last_synced => Time.now.utc.to_i}) }
     end
   end
 
