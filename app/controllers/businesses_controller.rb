@@ -6,7 +6,7 @@ class BusinessesController < ApplicationController
     if params[:last_synced]
       @businesses = Business.find(:all, :conditions => ["updated_at >= ?", Time.at(params[:last_synced].to_i).utc])
     else
-      @businesses = Business.all
+      @businesses = Business.find(:all)
     end
     
     respond_to do |format|

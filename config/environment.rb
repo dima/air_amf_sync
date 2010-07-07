@@ -22,7 +22,7 @@ Rails::Initializer.run do |config|
   config.gem "uuidtools"
   config.gem 'will_paginate', :version => '~> 2.3.11', :source => 'http://gemcutter.org'
   config.gem "faster-builder", :lib => "faster_builder"
-  # config.gem "restfulx", :version => '1.3.0'
+  config.gem "restfulx", :version => '1.3.0'
   
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named

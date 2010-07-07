@@ -6,6 +6,7 @@
   <mx:Script>
     <![CDATA[
       import flash.events.ProgressEvent;
+      import flash.external.ExternalInterface;
     
       import air.net.SocketMonitor;
       
@@ -43,7 +44,7 @@
       [Bindable]
       private var progressUpdate:String;
       
-      /*private var connection:SQLConnection;*/
+      private var connection:SQLConnection;
             
       private function init():void {
         Rx.enableLogging();
@@ -56,11 +57,11 @@
         socketMonitor.start();
         
         ApplicationController.initialize([AIRServiceProvider, AMFServiceProvider, JSONHTTPServiceProvider], 
-          XMLHTTPServiceProvider.ID, "airamfsync");
+          AMFServiceProvider.ID, "airamfsync");
 
         Rx.changes.setSyncProviders(
           ISyncingServiceProvider(Rx.services.getServiceProvider(AIRServiceProvider.ID)),
-            Rx.services.getServiceProvider(XMLHTTPServiceProvider.ID));
+            Rx.services.getServiceProvider(AMFServiceProvider.ID));
             
         Rx.models.addEventListener(ProgressEvent.PROGRESS, onProgressUpdate);
 
@@ -69,10 +70,16 @@
         Rx.changes.addEventListener(PullStartEvent.ID, onPullStart);
         Rx.changes.addEventListener(PullEndEvent.ID, onPullEnd);
         
-        /*initializeConnection();*/
+        trace("EI available:" + ExternalInterface.available);
+        
+        initializeConnection();
       }
       
-      /*private function initializeConnection():void {
+      public static function decodeJSON(data:String):Object {
+        return ExternalInterface.call("function(){return " + data + "}");
+      }
+      
+      private function initializeConnection():void {
         var databaseName:String = Rx.airDatabaseName;
         var databaseFile:File = File.userDirectory.resolvePath(databaseName + ".db");
         connection = new SQLConnection;
@@ -88,7 +95,7 @@
         } else {
           connection.openAsync(databaseFile);
         }
-      }*/
+      }
       
       private function onProgressUpdate(event:ProgressEvent):void {
         progressUpdate = "Downloaded: " + event.bytesLoaded + "B out of: " + event.bytesTotal + "B";
@@ -114,7 +121,7 @@
         online = (socketMonitor.available) ? true : false;
   
         if (online) {
-          Rx.defaultServiceId = XMLHTTPServiceProvider.ID;
+          Rx.defaultServiceId = AMFServiceProvider.ID;
         } else {
           Rx.defaultServiceId = AIRServiceProvider.ID;
         }
@@ -148,25 +155,17 @@
         syncStatus = "Pushing data to local database ..."
         
         var results:Array = JSON.decode(result) as Array;
-        trace(ObjectUtil.toString(results));
+        var metadata:Object = results.shift();
         
-        /*connection.addEventListener(SQLEvent.COMMIT, function(event:SQLEvent):void {
+        connection.addEventListener(SQLEvent.COMMIT, function(event:SQLEvent):void {
           syncStatus = "Done. All records pushed to database.";
-        });
-        connection.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
-          trace(event.error.getStackTrace());
-          connection.rollback();
         });
         connection.begin();
         
-        for each (var item:Object in results) {
-          var business:Object = item["business"]
+        for (var i:int = 0; i < results.length ; i++) {
+          var business:Object = results[i]["business"];
           var statement:SQLStatement = new SQLStatement;
           statement.sqlConnection = connection;
-          statement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
-            connection.rollback();
-            trace(ObjectUtil.toString(event));
-          });
           statement.text = "insert or replace into businesses(email, mobile_phone, phone, " + 
             "name, fax, new_business, business_number, id, rev, sync) values(:email, :mobile_phone, " + 
             ":phone, :name, :fax, :new_business, :business_number, :id, :rev, :sync)";
@@ -184,7 +183,7 @@
           statement.execute();
         }
 
-        connection.commit();   */         
+        connection.commit();            
       }
     ]]>
   </mx:Script>
@@ -193,7 +192,7 @@
     <mx:Label text="Status: {online ? 'Online' : 'Offline' }"/>
     <mx:HBox>
       <mx:Button label="Push" click="{Rx.changes.push()}" enabled="{online}"/>
-      <mx:Button label="Pull" click="{Rx.changes.pull(Business)}" enabled="{online}"/>
+      <mx:Button label="Pull" click="{Rx.changes.pull()}" enabled="{online}"/>
     </mx:HBox>
     <mx:Label text="{progressUpdate}"/>
     <mx:Label text="{syncStatus}"/>
