@@ -12,6 +12,7 @@ class AddressesController < ApplicationController
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @addresses }
+      format.json { render :json => @addresses.to_json(:attributes => {:last_synced => Time.now.utc.to_i.to_s}) }
       format.fxml { render :fxml => @addresses.to_fxml(:attributes => {:last_synced => Time.now.utc.to_i}) }
       format.amf  { render :amf => @addresses.to_amf(:attributes => {:last_synced => Time.now.utc.to_i}) }
     end
