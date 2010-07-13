@@ -46,6 +46,9 @@ ActionController::Dispatcher.middleware.insert_after 'ActionController::ParamsPa
 # generated code to work out of the box.
 ActionController::Base.allow_forgery_protection = false
 
+# Use pure AMF serializer
+RestfulX::AMF.serializer = :pure
+
 # Set up the default namespace for serializing Rails models to AMF
 RestfulX::AMF::ClassMapper.default_as_prefix = "airamfsync.models"
 
