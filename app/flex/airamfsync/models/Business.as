@@ -21,6 +21,8 @@ package airamfsync.models {
     public var fax:String = "";
 
     public var email:String = "";
+    
+    public var lastFeePaid:Number;
 
     [HasMany]
     public var addresses:ModelsCollection;
