@@ -1,6 +1,6 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
-<% for i in 1..5000 %>
+<% for i in 1..50 %>
   business_<%= i %>:
     id: <%= Fixtures.identify("business_#{i}".to_sym) %>
     business_number: <%= i %>00

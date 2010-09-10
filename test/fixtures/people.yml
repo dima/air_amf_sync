@@ -1,0 +1,9 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+<% for i in 1..5000 %>
+  person_<%= i %>:
+    id: <%= Fixtures.identify("person_#{i}".to_sym) %>
+    first_name: <%= i %>_First_Name
+    last_name: <%= i %>_Last_Name
+<% end %>

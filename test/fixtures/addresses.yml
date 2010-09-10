@@ -1,6 +1,6 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
-<% for i in 1..5000 %>
+<% for i in 1..50 %>
   address_<%= i %>:
     id: <%= Fixtures.identify("address_#{i}".to_sym) %>
     line_one: Address<%= i %>LineOneString
@@ -10,5 +10,5 @@
     state: British Columbia
     country: Canada
     owner_id: <%= Fixtures.identify("business_#{i}".to_sym) %>
-    owner_type: "Business"
+    owner_type: <%= ['Business','Person'].rand %>
 <% end %>

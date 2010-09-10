@@ -10,7 +10,7 @@ package airamfsync.controllers {
   public class ApplicationController extends RxApplicationController {
     private static var controller:ApplicationController;
     
-    public static var models:Array = [Address, Business]; /* Models */
+    public static var models:Array = [Address, Business, Person]; /* Models */
     
     public static var commands:Array = []; /* Commands */
     

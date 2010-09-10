@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" label="Person"
+  xmlns:rx="org.restfulx.components.rx.*">
+  <mx:Script><![CDATA[
+    import org.restfulx.Rx;
+    import org.restfulx.utils.RxUtils;
+    import airamfsync.models.Person;
+
+    [Bindable]
+    private var person:Person = new Person();
+
+    private function newPerson():void {
+      person = new Person();
+      peopleList.selectedIndex = -1;
+    }
+
+    private function savePerson():void {
+      updateModelProperties();
+      if (person.id) {
+        person.update({onSuccess: onPersonUpdate});
+      } else {
+        person.create({onSuccess: onPersonCreate});
+      }
+    }
+  
+    private function updateModelProperties():void {
+      person.firstName = firstNameTextInput.text;
+      person.lastName = lastNameTextInput.text;
+  
+    }
+   
+    private function destroyPerson():void {
+      person.destroy({onSuccess: onPersonDestroy});
+    }
+    
+    private function onPersonSelect():void {
+      person = RxUtils.clone(peopleList.selectedItem) as Person;
+    }
+    
+    private function onPersonCreate(result:Person):void {
+      person = new Person;
+    }
+    
+    private function onPersonUpdate(result:Person):void {
+      peopleList.selectedItem = result;
+      onPersonSelect();
+    }
+    
+    private function onPersonDestroy(result:Person):void {
+      onPersonCreate(result);
+    }    
+  ]]></mx:Script>
+  <mx:Panel id="peoplePanel"
+    title="People" cornerRadius="0" dropShadowEnabled="false" borderStyle="solid"
+    borderThickness="1" backgroundColor="#EEEEEE" width="25%" height="100%">
+    <mx:List id="peopleList"
+      width="100%" height="100%"
+      dataProvider="{Rx.models.index(Person)}"
+      change="onPersonSelect()"/>
+    <mx:ControlBar width="100%">
+      <mx:Button label="New Person" width="100%" height="30"
+        click="newPerson()"/>
+    </mx:ControlBar>
+  </mx:Panel>
+  <mx:Panel title="Edit Person" cornerRadius="0" dropShadowEnabled="false" borderStyle="solid"
+    borderThickness="1" backgroundColor="#EEEEEE" width="75%" height="100%">
+    <mx:Form width="100%" height="100%">
+      <mx:FormItem label="FirstName" width="100%">
+        <mx:TextInput id="firstNameTextInput" width="100%" text="{person.firstName}"/>
+      </mx:FormItem>
+      <mx:FormItem label="LastName" width="100%">
+        <mx:TextInput id="lastNameTextInput" width="100%" text="{person.lastName}"/>
+      </mx:FormItem>
+    </mx:Form>
+    <mx:ControlBar width="100%">
+      <mx:Button label="Save Person" width="50%" height="30"
+        click="savePerson()"/>
+      <mx:Button label="Delete Person" width="50%" height="30"
+        enabled="{RxUtils.canDeleteModel(person)}"
+        click="destroyPerson()"/>
+    </mx:ControlBar>
+  </mx:Panel>
+</mx:HBox>
