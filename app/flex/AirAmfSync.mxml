@@ -48,6 +48,7 @@
             
       private function init():void {
         Rx.enableLogging();
+        Rx.airEnableDatabaseMigrations = true;
         Rx.httpRootUrl = "http://localhost:3000/";
         Rx.enableSync = true;
 

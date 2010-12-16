@@ -12,6 +12,8 @@ package airamfsync.models {
 
     public var lastName:String = "";
     
+    public var title:String = "";
+    
     [HasMany]
     public var addresses:ModelsCollection;
 

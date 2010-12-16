@@ -34,11 +34,10 @@
       business.mobilePhone = mobilePhoneTextInput.text;
       business.fax = faxTextInput.text;
       business.email = emailTextInput.text;
-  
     }
    
     private function destroyBusiness():void {
-      business.destroy({onSuccess: onBusinessDestroy});
+      business.destroy({onSuccess: onBusinessDestroy, recursive: true});
     }
     
     private function onBusinessSelect():void {
