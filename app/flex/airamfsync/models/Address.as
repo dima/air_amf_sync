@@ -20,7 +20,7 @@ package airamfsync.models {
     public var country:String = "";
 
     [Lazy]
-    [BelongsTo(polymorphic="true", dependsOn="Business, Person")]
+    [BelongsTo(polymorphic="true", dependsOn="Business, Person", referAs="addresses")]
     public var owner:Object;
 
     public function Address() {

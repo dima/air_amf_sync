@@ -24,7 +24,7 @@ package airamfsync.models {
     
     public var lastFeePaid:Number;
 
-    [HasMany]
+    [HasMany(polymorphic=true, referAs="owner")]
     public var addresses:ModelsCollection;
     
     public function Business() {
