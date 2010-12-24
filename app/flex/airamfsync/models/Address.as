@@ -1,6 +1,7 @@
 package airamfsync.models {
   
   import org.restfulx.models.RxModel;
+  import org.restfulx.collections.ModelsCollection;
   
   [Resource(name="addresses")]
   [Bindable]
@@ -22,6 +23,9 @@ package airamfsync.models {
     [Lazy]
     [BelongsTo(polymorphic="true", dependsOn="Business, Person", referAs="addresses")]
     public var owner:Object;
+    
+    [HasMany]
+    public var locations:ModelsCollection;
 
     public function Address() {
       super(LABEL);
